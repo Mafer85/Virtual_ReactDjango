@@ -22,6 +22,7 @@ import Notificaciones from './common/components/Examples/Notificaciones';
 import ExampleTabs from './common/components/Examples/Tabs/Tabs';
 require('../style/index.css');
 
+import Catedratico from './common/components/Register/CatedraticoRegister'
 module.exports = (
     <div>
         <div className="container__content">
@@ -34,6 +35,7 @@ module.exports = (
                 <ProtectedRoute exact path="/grids" component={Grids} />
                 <ProtectedRoute exact path="/notifications" component={Notificaciones} />
                 <ProtectedRoute exact path="/tabs" component={ExampleTabs} />
+                <ProtectedRoute exact path="/nuevo_catedratico" component={Catedratico} />
                 <Route component={NotFound} />
             </Switch>
         </div>

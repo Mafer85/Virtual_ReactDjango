@@ -7,7 +7,7 @@ from api import viewsets
 
 router = DefaultRouter()
 router.register(r'user', viewsets.UserViewset)
-
+router.register(r'catedratico', viewsets.catedraticoViewset)
 
 urlpatterns = [
     path('api/', include(router.urls)),
