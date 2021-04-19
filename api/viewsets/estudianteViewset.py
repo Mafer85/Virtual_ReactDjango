@@ -4,20 +4,20 @@ from django.core.files import File
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, filters, viewsets
 from django.contrib.auth.models import User
+
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
 
-from api.models import Profesor
-from api.models import Profesion
+from api.models import Estudiante
 from api.models import Profile
 from api.models import Rol
-from api.serializers  import CatedraticoRegistroSerializer, CatedraticoSerializer, ProfesorUpdateSerializer
+from api.serializers import EstudianteRegistroSerializer, EstudianteSerializer, EstudianteUpdateSerializer
 
-class CatedraticoViewSet(viewsets.ModelViewSet):
-    queryset = Profesor.objects.filter(profesor_activo=True)
+class EstudianteViewSet(viewsets.ModelViewSet):
+    queryset = Estudiante.objects.filter(estudiante_activo=True)
 
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
     filter_fields = ("perfil__nombre", "perfil__apellidos")
@@ -26,11 +26,11 @@ class CatedraticoViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
-            return CatedraticoSerializer
+            return EstudianteSerializer
         elif self.action == 'put':
-            return ProfesorUpdateSerializer
+            return EstudianteUpdateSerializer
         else:
-            return CatedraticoRegistroSerializer
+            return EstudianteRegistroSerializer
 
     def get_permissions(self):
         """" Define permisos para este recurso """
@@ -45,7 +45,7 @@ class CatedraticoViewSet(viewsets.ModelViewSet):
     def create(self,request, *args, **kwargs):
         try:
             data = request.data
-            serializer = CatedraticoRegistroSerializer(data = data)
+            serializer = EstudianteRegistroSerializer(data = data)
             with transaction.atomic():
                 if serializer.is_valid():
                     print("data: ", data)
@@ -56,7 +56,7 @@ class CatedraticoViewSet(viewsets.ModelViewSet):
                     user.set_password(data.get("password"))
                     user.save()
 
-                    rol = Rol.objects.get(pk=2)
+                    rol = Rol.objects.get(pk=3)
                     profile = Profile.objects.create(
                         user = user,
                         rol = rol,
@@ -66,11 +66,12 @@ class CatedraticoViewSet(viewsets.ModelViewSet):
                         apellidos = data.get("apellidos"),
                     )
 
-
-                    profesion = Profesion.objects.get(pk=data.get("profesion"))
-                    Profesor.objects.create(
+                    Estudiante.objects.create(
                         perfil = profile,
-                        profesion = profesion,
+                        carnet = data.get("carnet"),
+                        contacto = data.get("contacto"),
+                        direccion_contacto = data.get("direccion_contacto"),
+                        telefono_contacto = data.get("telefono_contacto"),
                     )
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
                 else:
@@ -78,18 +79,23 @@ class CatedraticoViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"detail":str(e)},status=status.HTTP_400_BAD_REQUEST)
 
-
     """*********************ACTUALIZAR*********************"""
-    def update(self,request,pk=None):
+    def update(self,request, pk=None):
         try:
             data = request.data
-            serializer = ProfesorUpdateSerializer(data = data)
+            serializer = EstudianteUpdateSerializer(data = data)
             with transaction.atomic():
                 if serializer.is_valid():
-                    profesor = Profesor.objects.get(pk = pk)
-                    profesor.profesion = Profesion.objects.get(pk=data.get("profesion"))
-                    profesor.save()
-                    perfil = profesor.perfil
+                    print("data: ", data)
+                    estudiante = Estudiante.objects.get(pk = pk)
+                    estudiante.carnet = data.get("carnet")
+                    estudiante.contacto = data.get("contacto")
+                    estudiante.direccion_contacto = data.get("direccion_contacto")
+                    estudiante.telefono_contacto = data.get("telefono_contacto")
+                    estudiante.save()
+
+                    perfil = estudiante.perfil
+                    perfil.rol = Rol.objects.get(pk=3)
                     perfil.phone = data.get("phone")
                     perfil.address = data.get("address")
                     perfil.nombre = data.get("nombre")

@@ -22,7 +22,15 @@ import Notificaciones from './common/components/Examples/Notificaciones';
 import ExampleTabs from './common/components/Examples/Tabs/Tabs';
 require('../style/index.css');
 
-import Catedratico from './common/components/Register/CatedraticoRegister'
+import ProfesorList from './common/components/Profesor/ProfesorListContainer';
+import ProfesorCrear from './common/components/Profesor/ProfesorCrearContainer';
+
+import ProfesionContainer from './common/components/Profesion/ProfesionCrearContainer';
+import ProfesionList from './common/components/Profesion/ProfesionListContainer';
+
+import EstudianteCrear from './common/components/Estudiante/EstudianteCrearContainer';
+import EstudianteList from './common/components/Estudiante/EstudianteListContainer';
+
 module.exports = (
     <div>
         <div className="container__content">
@@ -35,7 +43,23 @@ module.exports = (
                 <ProtectedRoute exact path="/grids" component={Grids} />
                 <ProtectedRoute exact path="/notifications" component={Notificaciones} />
                 <ProtectedRoute exact path="/tabs" component={ExampleTabs} />
-                <ProtectedRoute exact path="/nuevo_catedratico" component={Catedratico} />
+
+                <ProtectedRoute exact path="/profesions" component={ProfesionList} />
+                <ProtectedRoute exact path="/profesions/:id/ver" component={ProfesionContainer} />
+                <ProtectedRoute exact path="/profesions/crear" component={ProfesionContainer} />
+                <ProtectedRoute exact path="/profesions/:id/editar" component={ProfesionContainer} />
+
+
+                <ProtectedRoute exact path="/profesor" component={ProfesorList} />
+                <ProtectedRoute exact path="/profesor/crear" component={ProfesorCrear} />
+                <ProtectedRoute exact path="/profesor/:id/ver" component={ProfesorCrear} />
+                <ProtectedRoute exact path="/profesor/:id/editar" component={ProfesorCrear} />
+
+                <ProtectedRoute exact path="/estudiante" component={EstudianteList} />
+                <ProtectedRoute exact path="/estudiante/crear" component={EstudianteCrear} />
+                <ProtectedRoute exact path="/estudiante/:id/ver" component={EstudianteCrear} />
+                <ProtectedRoute exact path="/estudiante/:id/editar" component={EstudianteCrear} />
+
                 <Route component={NotFound} />
             </Switch>
         </div>
