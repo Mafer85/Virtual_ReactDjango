@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'mptt',
     'django.contrib.sites',
     #'djcelery',
-    'debug_toolbar',
+    'debug_toolbar'
 ]
 
 MIDDLEWARE = [

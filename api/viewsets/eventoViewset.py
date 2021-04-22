@@ -9,23 +9,24 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
+import datetime
 
-from api.models import Grado, Nivel
-from api.serializers  import GradoRegistroSerializer, GradoSerializer
+from api.models import Ciclo, Evento
+from api.serializers  import EventoRegistroSerializer, EventoSerializer
 
-class GradoViewSet(viewsets.ModelViewSet):
-    queryset = Grado.objects.filter(grado_activo=True)
+class EventoViewSet(viewsets.ModelViewSet):
+    queryset = Evento.objects.filter(evento_activo=True)
 
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
-    filter_fields = ("nombre_grado", "descripcion_grado")
-    search_fields = ("nombre_grado", "descripcion_grado")
-    ordering_fields = ("nombre_grado", "descripcion_grado")
+    filter_fields = ("titulo_evento", "fecha")
+    search_fields = ("titulo_evento", "fecha")
+    ordering_fields = ("titulo_evento", "fecha")
 
     def get_serializer_class(self):
         if self.action == 'list' or self.action == 'retrieve':
-            return GradoSerializer
+            return EventoSerializer
         else:
-            return GradoRegistroSerializer
+            return EventoRegistroSerializer
 
     def get_permissions(self):
         """" Define permisos para este recurso """
@@ -40,14 +41,17 @@ class GradoViewSet(viewsets.ModelViewSet):
     def create(self,request, *args, **kwargs):
         try:
             data = request.data
-            serializer = GradoRegistroSerializer(data = data)
+            serializer = EventoRegistroSerializer(data = data)
             with transaction.atomic():
                 if serializer.is_valid():
-                    nivel = Nivel.objects.get(pk=data.get("nivel"))
-                    Grado.objects.create(
-                        nivel = nivel,
-                        nombre_grado = data.get("nombre_grado"),
-                        descripcion_grado = data.get("descripcion_grado"),
+                    ciclo_escolar = Ciclo.objects.get(pk=data.get("ciclo_escolar"))
+
+                    Evento.objects.create(
+                        ciclo_escolar = ciclo_escolar,
+                        titulo_evento = data.get("titulo_evento"),
+                        decripcion_evento = data.get("decripcion_evento"),
+                        fecha =  data.get("fecha"),
+                        hora = data.get("hora"),
                     )
                     return Response(serializer.data, status=status.HTTP_200_OK)
                 else:
@@ -59,14 +63,16 @@ class GradoViewSet(viewsets.ModelViewSet):
     def update(self,request, pk=None):
         try:
             data = request.data
-            serializer = GradoRegistroSerializer(data = data)
+            serializer = EventoRegistroSerializer(data = data)
             with transaction.atomic():
                 if serializer.is_valid():
-                    grado = Grado.objects.get(pk = pk)
-                    grado.nivel = Nivel.objects.get(pk=data.get("nivel"))
-                    grado.nombre_grado = data.get("nombre_grado")
-                    grado.descripcion_grado = data.get("descripcion_grado")
-                    grado.save()
+                    evento = Evento.objects.get(pk = pk)
+                    evento.ciclo_escolar = Ciclo.objects.get(pk=data.get("ciclo_escolar"))
+                    evento.titulo_evento = data.get("titulo_evento")
+                    evento.decripcion_evento = data.get("decripcion_evento")
+                    evento.fecha =  data.get("fecha")
+                    evento.hora = data.get("hora")
+                    evento.save()
                     return Response(serializer.data, status=status.HTTP_200_OK)
                 else:
                     return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)

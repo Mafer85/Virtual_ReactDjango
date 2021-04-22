@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { actions } from '../../../redux/modules/nivel/nivel';
-import NivelCrear from './NivelCrear';
+import NivelList from './NivelList';
+import {standardActions } from '../Utils/Grid/StandardActions';
 
 const ms2p = (state) => {
   return {
@@ -10,4 +11,4 @@ const ms2p = (state) => {
 
 const md2p = { ...actions };
 
-export default connect(ms2p, md2p)(NivelCrear);
+export default connect(ms2p, md2p)(NivelList);

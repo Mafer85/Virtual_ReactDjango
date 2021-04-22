@@ -7,3 +7,6 @@ from .nivelSerializer import NivelRegistroSerializer, NivelSerializer
 from .gradoSerializer import GradoRegistroSerializer, GradoSerializer
 from .cursoSerializer import CursoRegistroSerializer, CursoSerializer
 from .profesorUpdateSerializer import ProfesorUpdateSerializer
+from .seccionSerializer import SeccionRegistroSerializer, SeccionSerializer
+from .cicloSerializer import CicloRegistroSerializer, CicloSerializer
+from .eventoSerializer import EventoRegistroSerializer, EventoSerializer

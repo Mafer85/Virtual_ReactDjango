@@ -5,3 +5,6 @@ from .estudianteViewset import EstudianteViewSet
 from .nivelViewset import NivelViewset
 from .gradoViewset import GradoViewSet
 from .cursoViewset import CursoViewset
+from .seccionViewset import SeccionViewset
+from .cicloViewset import CicloViewset
+from .eventoViewset import EventoViewSet
